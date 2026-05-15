@@ -4,6 +4,7 @@ InterviewIQ is a **Production-Ready Full Stack Gen AI Job Preparation Platform**
 
 ![InterviewIQ UI](https://github.com/Tiku57/InterviewIQ/raw/main/Frontend/public/preview.png) *(Note: Add a real preview image to public folder if available)*
 
+---
 ## ✨ Key Features
 
 - **🛡️ Secure Authentication**: Full JWT-based authentication system with premium-designed, themed Login and Register pages featuring ambient glow effects.
@@ -15,6 +16,7 @@ InterviewIQ is a **Production-Ready Full Stack Gen AI Job Preparation Platform**
 - **📱 Fully Responsive Layout**: Optimized for all devices—from desktop monitors to mobile phones—featuring a slick hamburger menu, mobile-optimized navigation, and perfectly aligned equal-height flexbox grids.
 - **📥 ATS-Optimized Downloads**: Dynamically generates and allows you to download an ATS-friendly resume/report summary.
 
+---
 ## 🛠️ Tech Stack
 
 **Frontend:**
@@ -30,6 +32,7 @@ InterviewIQ is a **Production-Ready Full Stack Gen AI Job Preparation Platform**
 - **@google/genai**: Integration with Google's Gemini Pro model for advanced reasoning.
 - **pdf-parse**: Reliable PDF text extraction.
 
+---
 ## 🚀 Getting Started
 
 ### Prerequisites
@@ -37,6 +40,7 @@ InterviewIQ is a **Production-Ready Full Stack Gen AI Job Preparation Platform**
 - MongoDB Atlas account
 - Google Gemini API Key (get it at [Google AI Studio](https://aistudio.google.com/))
 
+---
 ### Installation
 
 1. **Clone the repository:**
@@ -61,6 +65,7 @@ InterviewIQ is a **Production-Ready Full Stack Gen AI Job Preparation Platform**
    npm run dev
    ```
 
+---
 ## 📸 UI/UX Design Philosophy
 
 InterviewIQ isn't just a tool; it's an experience. We've prioritized:
@@ -69,9 +74,8 @@ InterviewIQ isn't just a tool; it's an experience. We've prioritized:
 - **Interactive Feedback**: Draggable handles, hover glow effects, dynamic dashed drop zones, and smooth transitions that make the app feel alive.
 - **Clarity**: A clean, "no-box" full-page layout that focuses on the content that matters most—your career preparation.
 
-## 📄 License
-
-Distributed under the MIT License. See `LICENSE` for more information.
-
 ---
-Built with ❤️ by [Aaditya Sattawan](https://github.com/Tiku57)
+👨‍💻 Author
+Aaditya Sattawan
+---
+GitHub: https://github.com/Tiku57
