@@ -2,38 +2,12 @@ const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GENAI_API_KEY);
 
-const interviewReportJsonSchema = {
-    description: "Interview report schema",
-    type: "object",
-    properties: {
-        title: { type: "string" },
-        matchScore: { type: "integer" },
-        technicalQuestions: {
-            type: "array",
-            items: { type: "string" }
-        },
-        behavioralQuestions: {
-            type: "array",
-            items: { type: "string" }
-        },
-        skillGaps: {
-            type: "array",
-            items: { type: "string" }
-        },
-        preparationPlan: {
-            type: "array",
-            items: { type: "string" }
-        }
-    },
-    required: ["title", "matchScore", "technicalQuestions", "behavioralQuestions", "skillGaps", "preparationPlan"]
-};
-
 /**
  * @name generateInterviewReport
  * @description Service to generate interview report based on user resume, self description and job description.
  */
 async function generateInterviewReport({ resume, selfDescription, jobDescription }) {
-    // Use the exact alias confirmed by the diagnostic list
+    // Use gemini-flash-latest for stable free tier quota
     const model = genAI.getGenerativeModel({ 
         model: "gemini-flash-latest", 
         generationConfig: {
@@ -42,21 +16,51 @@ async function generateInterviewReport({ resume, selfDescription, jobDescription
     });
 
     const prompt = `
-        You are an expert interviewer and career coach. Based on the following information, generate a detailed interview preparation report in JSON format.
+        You are an expert interviewer and career coach. Based on the candidate's resume, self-description, and the job description provided, generate a comprehensive interview preparation report.
 
         Job Description: ${jobDescription || "Not provided"}
         Candidate Resume: ${resume || "Not provided"}
         Self Description: ${selfDescription || "Not provided"}
 
-        The report MUST be a JSON object with the following fields:
-        1. title: A concise title for the report (e.g. "Software Engineer Interview Prep")
-        2. matchScore: A number from 0 to 100 representing how well the candidate fits the job.
-        3. technicalQuestions: An array of 5-10 technical questions the candidate should prepare for.
-        4. behavioralQuestions: An array of 3-5 behavioral questions relevant to the role.
-        5. skillGaps: An array of specific skills the candidate is missing or needs to improve based on the job description.
-        6. preparationPlan: An array of actionable steps the candidate can take to prepare.
+        The response MUST be a valid JSON object matching this EXACT structure:
+        {
+            "title": "A concise title like 'Senior Developer Interview Prep'",
+            "matchScore": 85, // Integer between 0-100
+            "technicalQuestions": [
+                {
+                    "question": "The technical question text",
+                    "intention": "Why the interviewer is asking this",
+                    "answer": "The ideal answer the candidate should give"
+                }
+            ],
+            "behavioralQuestions": [
+                {
+                    "question": "The behavioral question text",
+                    "intention": "What they are looking for (e.g. leadership)",
+                    "answer": "Strategy for answering (e.g. use STAR method)"
+                }
+            ],
+            "skillGaps": [
+                {
+                    "skill": "The specific missing skill",
+                    "severity": "high" // Must be 'low', 'medium', or 'high'
+                }
+            ],
+            "preparationPlan": [
+                {
+                    "day": 1,
+                    "focus": "Focus area for this day",
+                    "tasks": ["Actionable task 1", "Actionable task 2"]
+                }
+            ]
+        }
 
-        Return ONLY the raw JSON object.
+        Requirements:
+        - Generate 5-7 technical questions.
+        - Generate 3-5 behavioral questions.
+        - List all relevant skill gaps.
+        - Create a 3-day preparation plan.
+        - Return ONLY the raw JSON object.
     `;
 
     try {
