@@ -20,12 +20,12 @@
             line-height: 1.2;
 
             .gradient-text {
-                background: linear-gradient(74deg, #4285f4 0, #9b72cb 9%, #d96570 20%, #d96570 24%, #9b72cb 35%, #4285f4 44%, #9b72cb 50%, #d96570 56%, #F5EEEE 75%, #F5EEEE 100%);
-                background-size: 400% 100%;
+                background: linear-gradient(90deg, #4285f4, #9b72cb, #d96570, #f040b5, #4285f4);
+                background-size: 200% auto;
                 -webkit-background-clip: text;
                 -webkit-text-fill-color: transparent;
                 background-clip: text;
-                animation: gradientShift 8s ease infinite;
+                animation: flowGradient 4s linear infinite;
             }
         }
 
@@ -355,8 +355,7 @@
     to { transform: rotate(360deg); }
 }
 
-@keyframes gradientShift {
-    0%   { background-position: 100% 50%; }
-    50%  { background-position: 0%   50%; }
-    100% { background-position: 100% 50%; }
+@keyframes flowGradient {
+    0% { background-position: 0% center; }
+    100% { background-position: -200% center; }
 }
