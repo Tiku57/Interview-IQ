@@ -72,8 +72,6 @@
 .app-body {
     display: flex;
     height: calc(100vh - 70px);
-    padding-bottom: 1.5rem;
-    box-sizing: border-box;
 }
 
 .sidebar {
@@ -192,7 +190,7 @@
 .main-content {
     flex: 1;
     position: relative;
-    overflow: hidden;
+    overflow-y: auto;
     display: flex;
     flex-direction: column;
 
