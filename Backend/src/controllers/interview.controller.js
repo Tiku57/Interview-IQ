@@ -14,10 +14,12 @@ async function generateInterViewReportController(req, res) {
 
         if (req.file) {
             try {
-                const pdfData = await new pdfParse.PDFParse(Uint8Array.from(req.file.buffer));
-                const parsedContent = await pdfData.getText();
+                const pdfParser = new pdfParse.PDFParse(Uint8Array.from(req.file.buffer));
+                await pdfParser.load();
+                const parsedContent = await pdfParser.getText();
                 resumeText = parsedContent.text || "";
             } catch (err) {
+                console.error("PDF parse error:", err);
                 return res.status(400).json({ message: "Failed to parse the uploaded PDF resume. Please ensure it is a valid PDF file." });
             }
         }
