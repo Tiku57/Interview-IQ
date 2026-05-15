@@ -1,0 +1,139 @@
+.app-layout {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+    background-color: #131314;
+    color: #e3e3e3;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background-color: #1e1f20;
+    border-bottom: 1px solid #333;
+
+    &__logo {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 1.25rem;
+        font-weight: 600;
+        letter-spacing: -0.5px;
+        color: #fff;
+    }
+
+    .logout-btn {
+        background: transparent;
+        color: #e3e3e3;
+        border: 1px solid #444;
+        padding: 0.4rem 1rem;
+        border-radius: 20px;
+        cursor: pointer;
+        transition: all 0.2s;
+        &:hover {
+            background: #333;
+            color: #fff;
+        }
+    }
+}
+
+.app-body {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+}
+
+.sidebar {
+    width: 260px;
+    background-color: #1e1f20;
+    border-right: 1px solid #333;
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    transition: transform 0.3s ease;
+    
+    &__header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+        h3 {
+            font-size: 0.9rem;
+            color: #9aa0a6;
+            text-transform: uppercase;
+        }
+        .new-chat-btn {
+            background: #444;
+            color: #fff;
+            border: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            &:hover {
+                background: #555;
+            }
+        }
+    }
+
+    .history-list {
+        list-style: none;
+        overflow-y: auto;
+        li {
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.25rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            color: #e3e3e3;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            &:hover {
+                background-color: #333;
+            }
+        }
+    }
+}
+
+.main-content {
+    flex: 1;
+    position: relative;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+
+    .toggle-sidebar {
+        position: absolute;
+        top: 1rem;
+        left: 1rem;
+        background: transparent;
+        border: none;
+        color: #e3e3e3;
+        cursor: pointer;
+        z-index: 10;
+        display: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        position: absolute;
+        height: 100%;
+        z-index: 20;
+        transform: translateX(-100%);
+        &.open {
+            transform: translateX(0);
+        }
+    }
+    .main-content .toggle-sidebar {
+        display: block;
+    }
+}
