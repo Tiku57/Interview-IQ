@@ -3,8 +3,13 @@ import { useAuth } from '../features/auth/hooks/useAuth';
 import { useNavigate } from 'react-router';
 
 const Navbar = () => {
-    const { logout } = useAuth();
+    const { handleLogout } = useAuth();
     const navigate = useNavigate();
+
+    const onLogout = async () => {
+        await handleLogout();
+        navigate('/login');
+    };
     
     return (
         <nav className="navbar">
@@ -15,7 +20,7 @@ const Navbar = () => {
                 <span>InterviewIQ</span>
             </div>
             <div className="navbar__actions">
-                <button className="logout-btn" onClick={logout}>Logout</button>
+                <button className="logout-btn" onClick={onLogout}>Logout</button>
             </div>
         </nav>
     );
