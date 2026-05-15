@@ -23,11 +23,12 @@ export const useInterview = () => {
             setReport(response.interviewReport)
         } catch (error) {
             console.log(error)
+            alert(error.response?.data?.message || "An error occurred while generating the report.");
         } finally {
             setLoading(false)
         }
 
-        return response.interviewReport
+        return response ? response.interviewReport : null
     }
 
     const getReportById = async (interviewId) => {
