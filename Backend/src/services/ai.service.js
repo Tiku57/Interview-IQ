@@ -2,6 +2,28 @@ const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GENAI_API_KEY);
 
+// Diagnostic: Check if API Key is loaded and list models
+(async () => {
+    const key = process.env.GOOGLE_GENAI_API_KEY;
+    if (!key) {
+        console.error(">>> [DIAGNOSTIC] CRITICAL: GOOGLE_GENAI_API_KEY is NOT found in process.env!");
+    } else {
+        console.log(`>>> [DIAGNOSTIC] API Key found. Starts with: ${key.substring(0, 4)}...`);
+        try {
+            // Using a raw fetch to check models if the SDK fails
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${key}`);
+            const data = await response.json();
+            if (data.models) {
+                console.log(">>> [DIAGNOSTIC] Available models for this key:", data.models.map(m => m.name).join(", "));
+            } else {
+                console.error(">>> [DIAGNOSTIC] Could not list models. Response:", JSON.stringify(data));
+            }
+        } catch (err) {
+            console.error(">>> [DIAGNOSTIC] Model list failed:", err.message);
+        }
+    }
+})();
+
 const interviewReportJsonSchema = {
     description: "Interview report schema",
     type: "object",
