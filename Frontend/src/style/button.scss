@@ -13,12 +13,15 @@
     transition: all 0.2s ease-in-out;
 
     &.primary-button {
-        background-color: #EA21A2;
+        background: linear-gradient(135deg, #F040B5, #C020C0);
         color: white;
-    }
+        box-shadow: 0 4px 14px rgba(240, 64, 181, 0.3);
 
-    &:hover {
-        background-color: #3b77db;
+        &:hover {
+            background: linear-gradient(135deg, #FF55C8, #D030D0);
+            box-shadow: 0 6px 18px rgba(240, 64, 181, 0.4);
+            transform: translateY(-1px);
+        }
     }
 
     &:active {
