@@ -23,6 +23,7 @@ InterviewIQ is a **Production-Ready Full Stack Gen AI Job Preparation Platform**
 - **React Router**: Seamless navigation and protected routing for authenticated users.
 - **Axios**: Robust API communication.
 
+
 **Backend:**
 - **Node.js & Express.js**: High-performance backend architecture.
 - **MongoDB & Mongoose**: Scalable NoSQL database for user data and interview reports.
