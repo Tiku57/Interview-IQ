@@ -4,25 +4,31 @@ main {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #131314;
+    background: radial-gradient(ellipse at 30% 40%, rgba(234, 33, 162, 0.08), transparent 60%),
+                radial-gradient(ellipse at 70% 70%, rgba(175, 5, 170, 0.08), transparent 60%),
+                #171313;
 
     .form-container {
-        min-width: 380px;
+        min-width: 400px;
         display: flex;
         flex-direction: column;
         gap: 1.5rem;
         padding: 2.5rem 2rem;
-        background: rgba(255, 255, 255, 0.03);
-        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: rgba(23, 19, 19, 0.7);
+        border: 1px solid rgba(234, 33, 162, 0.2);
         border-radius: 24px;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-        backdrop-filter: blur(10px);
+        box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5), 0 0 40px rgba(234, 33, 162, 0.06);
+        backdrop-filter: blur(20px);
         
         h2 {
             font-size: 2rem;
-            color: #fff;
+            font-weight: 700;
             text-align: center;
             margin-bottom: 0.5rem;
+            background: linear-gradient(90deg, #EA21A2, #AF05AA);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
     }
 
@@ -46,9 +52,9 @@ main {
         }
 
         input {
-            border: 1px solid #333;
-            background: #1e1f20;
-            color: #e3e3e3;
+            border: 1px solid rgba(234, 33, 162, 0.2);
+            background: rgba(23, 19, 19, 0.6);
+            color: #F5EEEE;
             outline: none;
             padding-inline: 1.25rem;
             padding-block: 0.85rem;
@@ -57,8 +63,8 @@ main {
             transition: all 0.2s ease;
             
             &:focus {
-                border-color: #4285f4;
-                box-shadow: 0 0 0 2px rgba(66, 133, 244, 0.2);
+                border-color: #EA21A2;
+                box-shadow: 0 0 0 3px rgba(234, 33, 162, 0.15);
             }
             
             &::placeholder {
@@ -68,13 +74,13 @@ main {
     }
 
     a {
-        color: #4285f4;
+        color: #EA21A2;
         text-decoration: none;
         font-weight: 500;
         transition: color 0.2s;
         
         &:hover {
-            color: #8ab4f8;
+            color: #AF05AA;
             text-decoration: underline;
         }
     }
