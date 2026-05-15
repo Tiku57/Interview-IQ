@@ -73,8 +73,16 @@ async function generateInterviewReport({ resume, selfDescription, jobDescription
 `
 
     try {
+        // [DEBUG] List available models to help identify the correct one
+        try {
+            const models = await ai.models.list();
+            console.log(">>> [DEBUG] Available models:", JSON.stringify(models.map(m => m.name)));
+        } catch (listError) {
+            console.error(">>> [DEBUG] Could not list models:", listError.message);
+        }
+
         const response = await ai.models.generateContent({
-            model: "gemini-1.5-flash",
+            model: "gemini-1.5-flash-latest", // Switching to -latest for better compatibility
             contents: prompt,
             config: {
                 responseMimeType: "application/json",
