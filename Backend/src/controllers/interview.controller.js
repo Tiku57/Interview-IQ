@@ -9,38 +9,49 @@ const interviewReportModel = require("../models/interviewReport.model")
  * @description Controller to generate interview report based on user self description, resume and job description.
  */
 async function generateInterViewReportController(req, res) {
+    console.log(">>> [DEBUG] generateInterViewReportController started");
+    console.log(">>> [DEBUG] User:", req.user);
+    console.log(">>> [DEBUG] Body Keys:", Object.keys(req.body));
+    console.log(">>> [DEBUG] File Present:", !!req.file);
+
     try {
         let resumeText = "";
 
         if (req.file) {
+            console.log(">>> [DEBUG] Parsing PDF...");
             try {
                 const pdfParser = new pdfParse.PDFParse(Uint8Array.from(req.file.buffer));
                 await pdfParser.load();
                 const parsedContent = await pdfParser.getText();
                 resumeText = parsedContent.text || "";
+                console.log(">>> [DEBUG] PDF parsed, length:", resumeText.length);
             } catch (err) {
-                console.error("PDF parse error:", err);
-                return res.status(400).json({ message: "Failed to parse the uploaded PDF resume. Please ensure it is a valid PDF file." });
+                console.error(">>> [ERROR] PDF parse error:", err);
+                return res.status(400).json({ message: "Failed to parse the uploaded PDF resume." });
             }
         }
 
         const { selfDescription, jobDescription } = req.body;
 
         if (!resumeText && (!selfDescription || !selfDescription.trim())) {
+            console.log(">>> [DEBUG] Validation failed: No content provided");
             return res.status(400).json({ message: "Either a resume or a self description must be provided." });
         }
 
+        console.log(">>> [DEBUG] Calling AI service...");
         const interViewReportByAi = await generateInterviewReport({
             resume: resumeText,
             selfDescription,
             jobDescription
         });
+        console.log(">>> [DEBUG] AI responded successfully");
 
-        // Sanitize matchScore (ensure it's a number, remove % if AI included it)
+        // Sanitize matchScore
         if (interViewReportByAi.matchScore && typeof interViewReportByAi.matchScore === "string") {
             interViewReportByAi.matchScore = parseInt(interViewReportByAi.matchScore.replace(/[^0-9]/g, "")) || 0;
         }
 
+        console.log(">>> [DEBUG] Saving to database...");
         const interviewReport = await interviewReportModel.create({
             user: req.user.id,
             resume: resumeText,
@@ -48,14 +59,16 @@ async function generateInterViewReportController(req, res) {
             jobDescription,
             ...interViewReportByAi
         });
+        console.log(">>> [DEBUG] Report saved, ID:", interviewReport._id);
 
         res.status(201).json({
             message: "Interview report generated successfully.",
             interviewReport
         });
     } catch (error) {
-        console.error("Error generating report:", error);
-        res.status(500).json({ message: "Failed to generate interview report." });
+        console.error(">>> [CRITICAL ERROR] Controller failed:", error.message);
+        console.error(error.stack);
+        res.status(500).json({ message: "Failed to generate interview report. Check server logs." });
     }
 }
 
