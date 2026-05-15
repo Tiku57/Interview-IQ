@@ -16,7 +16,6 @@ const Layout = ({ children }) => {
                 <aside className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
                     <div className="sidebar__header">
                         <h3>Recent Plans</h3>
-                        <button className="new-chat-btn" onClick={() => navigate('/')}>+</button>
                     </div>
                     <ul className="history-list">
                         {reports?.map(report => (
