@@ -80,10 +80,12 @@ export const useInterview = () => {
     }
 
     useEffect(() => {
+        getReports()
+    }, [])
+
+    useEffect(() => {
         if (interviewId) {
             getReportById(interviewId)
-        } else {
-            getReports()
         }
     }, [ interviewId ])
 
