@@ -33,9 +33,9 @@ const interviewReportJsonSchema = {
  * @description Service to generate interview report based on user resume, self description and job description.
  */
 async function generateInterviewReport({ resume, selfDescription, jobDescription }) {
-    // Use gemini-1.5-flash for speed and reliability
+    // Use gemini-1.5-flash (stable) for guaranteed free tier quota
     const model = genAI.getGenerativeModel({ 
-        model: "gemini-2.0-flash", // Using 2.0-flash as confirmed by account diagnostic
+        model: "gemini-1.5-flash", 
         generationConfig: {
             responseMimeType: "application/json",
         }
