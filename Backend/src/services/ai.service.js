@@ -90,7 +90,17 @@ async function generateInterviewReport({ resume, selfDescription, jobDescription
             throw new Error("Empty response from AI");
         }
 
-        return JSON.parse(textContent)
+        try {
+            return JSON.parse(textContent)
+        } catch (parseError) {
+            console.error("Failed to parse AI response as JSON. Raw text:", textContent);
+            // Fallback: try to find JSON block in the text if AI returned markdown
+            const jsonMatch = textContent.match(/\{[\s\S]*\}/);
+            if (jsonMatch) {
+                return JSON.parse(jsonMatch[0]);
+            }
+            throw new Error("Invalid JSON format from AI");
+        }
     } catch (error) {
         console.error("Error in generateInterviewReport service:", error);
         throw error;

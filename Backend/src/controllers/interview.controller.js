@@ -36,6 +36,11 @@ async function generateInterViewReportController(req, res) {
             jobDescription
         });
 
+        // Sanitize matchScore (ensure it's a number, remove % if AI included it)
+        if (interViewReportByAi.matchScore && typeof interViewReportByAi.matchScore === "string") {
+            interViewReportByAi.matchScore = parseInt(interViewReportByAi.matchScore.replace(/[^0-9]/g, "")) || 0;
+        }
+
         const interviewReport = await interviewReportModel.create({
             user: req.user.id,
             resume: resumeText,
