@@ -1,5 +1,5 @@
 import React from 'react';
-import { useAuth } from '../features/auth/auth.context';
+import { useAuth } from '../features/auth/hooks/useAuth';
 
 const Navbar = () => {
     const { logout } = useAuth();
