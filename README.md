@@ -1,76 +1,76 @@
-# InterviewIQ
+# InterviewIQ 🚀
 
-InterviewIQ is a Production-Ready Full Stack Gen AI Job Preparation Web Application. It empowers users to analyze job descriptions against their resumes (or self-descriptions), detect skill gaps, generate AI-powered interview questions, and build a personalized preparation strategy using Google's Gemini AI.
+InterviewIQ is a **Production-Ready Full Stack Gen AI Job Preparation Platform**. It empowers job seekers to analyze job descriptions against their profiles, detect skill gaps, generate AI-powered interview questions, and build a personalized preparation roadmap using Google's Gemini AI.
 
-## Features
+![InterviewIQ UI](https://github.com/Tiku57/InterviewIQ/raw/main/Frontend/public/preview.png) *(Note: Add a real preview image to public folder if available)*
 
-- **Secure User Authentication**: Full JWT-based authentication system with secure user registration and login.
-- **AI-Powered Interview Strategy**: Generates custom interview questions (behavioral and technical) and preparation plans based on the user's profile and the target job description.
-- **Resume Parsing**: Automatically extracts and reads text from uploaded PDF resumes.
-- **Skill Gap Analysis**: Uses AI to cross-reference the user's skills against job requirements and highlights critical gaps.
-- **ATS-Optimized PDF Generation**: Dynamically creates a downloadable, ATS-friendly resume PDF using Puppeteer.
-- **Recent Reports Dashboard**: Saves user history so you can review previous interview preparation strategies at any time.
+## ✨ Key Features
 
-## Tech Stack
+- **🛡️ Secure Authentication**: Full JWT-based authentication system with premium-designed, themed Login and Register pages featuring ambient glow effects.
+- **🧠 AI-Powered Strategy**: Generates custom technical and behavioral interview questions plus a detailed day-by-day preparation roadmap based on your profile and the target job.
+- **📄 Intelligent Resume Parsing**: Automatically extracts and analyzes text from uploaded PDF resumes using advanced parsing techniques.
+- **⚖️ Skill Gap Detection**: Uses AI to cross-reference your skills against job requirements, providing a "Match Score" and highlighting critical areas for improvement.
+- **🎨 Modern "Gemini-like" UI**: A stunning, responsive interface built with glassmorphism, smooth gradients (Pink/Purple theme), and interactive micro-animations.
+- **↕️ Draggable Workspace**: A fully resizable sidebar workspace that lets you customize your view, with a smooth dragging handle and persistent layout.
+- **📱 Fully Responsive**: Optimized for all devices—from desktop monitors to mobile phones—featuring a slick hamburger menu and mobile-optimized navigation.
+- **📥 ATS-Optimized Downloads**: Dynamically generates and allows you to download an ATS-friendly resume/report summary.
+
+## 🛠️ Tech Stack
 
 **Frontend:**
-- React (Vite)
-- TailwindCSS / SCSS for Styling
-- Axios for API requests
-- React Router
+- **React (Vite)**: For a blazing fast development and production experience.
+- **SCSS**: Advanced styling with a focus on modern design principles (Glassmorphism, Flexbox/Grid).
+- **React Router**: Seamless navigation and protected routing for authenticated users.
+- **Axios**: Robust API communication.
 
 **Backend:**
-- Node.js & Express.js
-- MongoDB & Mongoose
-- JSON Web Tokens (JWT) for authentication
-- `@google/genai` (Google Gemini API)
-- `pdf-parse` (PDF text extraction)
-- `puppeteer` (PDF generation)
+- **Node.js & Express.js**: High-performance backend architecture.
+- **MongoDB & Mongoose**: Scalable NoSQL database for user data and interview reports.
+- **JWT**: Secure, stateless authentication.
+- **@google/genai**: Integration with Google's Gemini Pro model for advanced reasoning.
+- **pdf-parse**: Reliable PDF text extraction.
 
-## Prerequisites
+## 🚀 Getting Started
 
-Before running the application, make sure you have the following installed:
-- Node.js (v18 or higher recommended)
-- A MongoDB Atlas Account / Connection String
-- A Google Gemini API Key (from Google AI Studio)
+### Prerequisites
+- Node.js (v18+)
+- MongoDB Atlas account
+- Google Gemini API Key (get it at [Google AI Studio](https://aistudio.google.com/))
 
-## Environment Setup
+### Installation
 
-1. Navigate to the `Backend` directory and create a `.env` file:
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/Tiku57/InterviewIQ.git
+   cd InterviewIQ
+   ```
+
+2. **Backend Setup:**
    ```bash
    cd Backend
-   touch .env
+   npm install
+   # Create .env file
+   echo "PORT=3000\nMONGO_URI=your_mongodb_uri\nJWT_SECRET=your_jwt_secret\nGOOGLE_GENAI_API_KEY=your_gemini_key" > .env
+   npm run dev
    ```
 
-2. Add your secrets to the `Backend/.env` file:
-   ```env
-   MONGO_URI=your_mongodb_connection_string
-   JWT_SECRET=your_super_secret_jwt_key
-   GOOGLE_GENAI_API_KEY=your_gemini_api_key
+3. **Frontend Setup:**
+   ```bash
+   cd ../Frontend
+   npm install
+   npm run dev
    ```
 
-## Running the Project Locally
+## 📸 UI/UX Design Philosophy
 
-### 1. Start the Backend Server
-```bash
-cd Backend
-npm install
-npm run dev
-```
-The backend API will start on `http://localhost:3000`.
+InterviewIQ isn't just a tool; it's an experience. We've prioritized:
+- **Visual Excellence**: A curated dark-mode palette (#171313) with vibrant Pink (#F040B5) and Purple accents.
+- **Interactive Feedback**: Draggable handles, hover effects, and smooth transitions that make the app feel alive.
+- **Clarity**: A clean, "no-box" full-page layout that focuses on the content that matters most—your career preparation.
 
-### 2. Start the Frontend Application
-In a new terminal window:
-```bash
-cd Frontend
-npm install
-npm run dev
-```
-The React frontend will start on `http://localhost:5173`.
+## 📄 License
 
-## How to Use
-1. Open `http://localhost:5173` in your browser.
-2. Register for a new account or log in.
-3. Paste a target Job Description.
-4. Upload your resume (PDF) OR type a brief Self-Description.
-5. Click **Generate My Interview Strategy** and let the AI do the heavy lifting!
+Distributed under the MIT License. See `LICENSE` for more information.
+
+---
+Built with ❤️ by [Aaditya Sattawan](https://github.com/Tiku57)
