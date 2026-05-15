@@ -19,18 +19,26 @@
 .interview-nav {
     width: 240px;
     flex-shrink: 0;
-    padding: 2rem 1.5rem;
+    padding: 2rem 1.5rem 0 1.5rem;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    overflow-y: auto;
     min-height: 0;
     border-right: 1px solid rgba(255, 255, 255, 0.06);
     
     .nav-content {
+        flex: 1;
         display: flex;
         flex-direction: column;
         gap: 0.5rem;
+        overflow-y: auto;
+        padding-bottom: 1rem;
+    }
+
+    .nav-download {
+        flex-shrink: 0;
+        padding: 1rem 0 1.5rem 0;
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
+        margin-top: 0.5rem;
     }
     
     &__label {
@@ -78,7 +86,7 @@
 
 .interview-content {
     flex: 1;
-    padding: 2rem 2.5rem;
+    padding: 2rem 2.5rem 4rem 2.5rem;
     overflow-y: auto;
     min-height: 0;
     
