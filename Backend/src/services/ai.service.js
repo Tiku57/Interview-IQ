@@ -72,16 +72,29 @@ async function generateInterviewReport({ resume, selfDescription, jobDescription
                         Job Description: ${jobDescription}
 `
 
-    const response = await ai.models.generateContent({
-        model: "gemini-1.5-flash",
-        contents: prompt,
-        config: {
-            responseMimeType: "application/json",
-            responseSchema: interviewReportJsonSchema,
-        }
-    })
+    try {
+        const response = await ai.models.generateContent({
+            model: "gemini-1.5-flash",
+            contents: prompt,
+            config: {
+                responseMimeType: "application/json",
+                responseJsonSchema: interviewReportJsonSchema,
+            }
+        })
 
-    return JSON.parse(response.text)
+        // Robustly get the text content
+        const textContent = response.text || (response.candidates && response.candidates[0]?.content?.parts?.[0]?.text);
+
+        if (!textContent) {
+            console.error("Gemini AI returned empty response:", JSON.stringify(response, null, 2));
+            throw new Error("Empty response from AI");
+        }
+
+        return JSON.parse(textContent)
+    } catch (error) {
+        console.error("Error in generateInterviewReport service:", error);
+        throw error;
+    }
 
 }
 
@@ -129,21 +142,33 @@ async function generateResumePdf({ resume, selfDescription, jobDescription }) {
                         The resume should not be so lengthy, it should ideally be 1-2 pages long when converted to PDF. Focus on quality rather than quantity and make sure to include all the relevant information that can increase the candidate's chances of getting an interview call for the given job description.
                     `
 
-    const response = await ai.models.generateContent({
-        model: "gemini-1.5-flash",
-        contents: prompt,
-        config: {
-            responseMimeType: "application/json",
-            responseSchema: resumePdfJsonSchema,
+    try {
+        const response = await ai.models.generateContent({
+            model: "gemini-1.5-flash",
+            contents: prompt,
+            config: {
+                responseMimeType: "application/json",
+                responseJsonSchema: resumePdfJsonSchema,
+            }
+        })
+
+
+        const textContent = response.text || (response.candidates && response.candidates[0]?.content?.parts?.[0]?.text);
+
+        if (!textContent) {
+            console.error("Gemini AI returned empty response for resume:", JSON.stringify(response, null, 2));
+            throw new Error("Empty response from AI");
         }
-    })
 
+        const jsonContent = JSON.parse(textContent)
 
-    const jsonContent = JSON.parse(response.text)
+        const pdfBuffer = await generatePdfFromHtml(jsonContent.html)
 
-    const pdfBuffer = await generatePdfFromHtml(jsonContent.html)
-
-    return pdfBuffer
+        return pdfBuffer
+    } catch (error) {
+        console.error("Error in generateResumePdf service:", error);
+        throw error;
+    }
 
 }
 
