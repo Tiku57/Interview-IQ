@@ -2,8 +2,6 @@
 
 InterviewIQ is a **Production-Ready Full Stack Gen AI Job Preparation Platform**. It empowers job seekers to analyze job descriptions against their profiles, detect skill gaps, generate AI-powered interview questions, and build a personalized preparation roadmap using Google's Gemini AI.
 
-![InterviewIQ UI](https://github.com/Tiku57/InterviewIQ/raw/main/Frontend/public/preview.png) *(Note: Add a real preview image to public folder if available)*
-
 ---
 ## ✨ Key Features
 
