@@ -12,48 +12,65 @@
     justify-content: space-between;
     align-items: center;
     padding: 1rem 2rem;
-    background-color: #1e1f20;
-    border-bottom: 1px solid #333;
-
+    background-color: rgba(26, 26, 28, 0.8);
+    backdrop-filter: blur(15px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    height: 70px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    
     &__logo {
         display: flex;
         align-items: center;
-        gap: 0.5rem;
-        font-size: 1.25rem;
-        font-weight: 600;
-        letter-spacing: -0.5px;
-        color: #fff;
-    }
-
-    .logout-btn {
-        background: transparent;
+        gap: 0.75rem;
+        font-size: 1.5rem;
+        font-weight: bold;
         color: #e3e3e3;
-        border: 1px solid #444;
-        padding: 0.4rem 1rem;
-        border-radius: 20px;
-        cursor: pointer;
-        transition: all 0.2s;
+        transition: transform 0.2s, opacity 0.2s;
+        
         &:hover {
-            background: #333;
-            color: #fff;
+            opacity: 0.8;
         }
+    }
+    
+    &__actions {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+}
+
+.logout-btn {
+    background-color: transparent;
+    color: #e3e3e3;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+    
+    &:hover {
+        background-color: rgba(255, 255, 255, 0.05);
+        border-color: rgba(255, 255, 255, 0.2);
     }
 }
 
 .app-body {
     display: flex;
-    flex: 1;
-    overflow: hidden;
+    height: calc(100vh - 70px);
 }
 
 .sidebar {
-    width: 260px;
-    background-color: #1e1f20;
-    border-right: 1px solid #333;
+    width: 300px;
+    background-color: rgba(30, 31, 32, 0.4);
+    backdrop-filter: blur(20px);
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
     display: flex;
     flex-direction: column;
-    padding: 1rem;
-    transition: transform 0.3s ease;
+    padding: 1.5rem;
+    transition: transform 0.3s ease, width 0.3s ease;
     
     &__new-chat {
         margin-bottom: 2rem;
@@ -62,10 +79,10 @@
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            background-color: #2a2a2c;
+            background-color: rgba(255, 255, 255, 0.05);
             color: #e3e3e3;
-            border: none;
-            padding: 0.75rem 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 0.75rem 1.25rem;
             border-radius: 24px;
             cursor: pointer;
             font-size: 0.95rem;
@@ -74,7 +91,9 @@
             width: fit-content;
             
             &:hover {
-                background-color: #3b3b3e;
+                background-color: rgba(255, 255, 255, 0.1);
+                border-color: rgba(255, 255, 255, 0.15);
+                transform: translateY(-1px);
             }
         }
     }
@@ -109,19 +128,46 @@
 
     .history-list {
         list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        flex: 1;
         overflow-y: auto;
+        
         li {
-            padding: 0.75rem 1rem;
-            margin-bottom: 0.25rem;
-            border-radius: 8px;
+            padding: 0.85rem 1rem;
+            color: #c4c7c5;
             cursor: pointer;
-            font-size: 0.9rem;
-            color: #e3e3e3;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            border: 1px solid transparent;
+            
+            &::before {
+                content: '';
+                display: block;
+                width: 16px;
+                height: 16px;
+                background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%239aa0a6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z'%3E%3C/path%3E%3C/svg%3E");
+                background-size: cover;
+                opacity: 0.7;
+            }
+            
             &:hover {
-                background-color: #333;
+                background-color: rgba(255, 255, 255, 0.08);
+                color: #e3e3e3;
+                border-color: rgba(255, 255, 255, 0.05);
+                transform: translateX(2px);
+                
+                &::before {
+                    opacity: 1;
+                }
             }
         }
     }
