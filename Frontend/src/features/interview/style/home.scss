@@ -1,14 +1,13 @@
 .home-page-gemini {
     display: flex;
     flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
     height: 100%;
     justify-content: center;
     align-items: center;
     padding: 2rem;
-    position: relative;
-    width: 100%;
-    max-width: 900px;
-    margin: 0 auto;
 
     .welcome-header {
         text-align: center;
