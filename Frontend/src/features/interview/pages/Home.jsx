@@ -7,17 +7,15 @@ const Home = () => {
     const { loading, generateReport } = useInterview();
     const [jobDescription, setJobDescription] = useState("");
     const [selfDescription, setSelfDescription] = useState("");
-    const [selectedFileName, setSelectedFileName] = useState("");
-    const resumeInputRef = useRef();
+    const [selectedFile, setSelectedFile] = useState(null);
     const navigate = useNavigate();
 
     const handleGenerateReport = async () => {
-        const resumeFile = resumeInputRef.current.files[0];
-        if (!resumeFile && !selfDescription.trim()) {
+        if (!selectedFile && !selfDescription.trim()) {
             alert("Please provide either a Resume or a Quick Self-Description.");
             return;
         }
-        const data = await generateReport({ jobDescription, selfDescription, resumeFile });
+        const data = await generateReport({ jobDescription, selfDescription, resumeFile: selectedFile });
         if (data) {
             navigate(`/interview/${data._id}`);
         }
@@ -25,9 +23,9 @@ const Home = () => {
 
     const handleFileChange = (e) => {
         if (e.target.files.length > 0) {
-            setSelectedFileName(e.target.files[0].name);
+            setSelectedFile(e.target.files[0]);
         } else {
-            setSelectedFileName("");
+            setSelectedFile(null);
         }
     };
 
@@ -42,7 +40,7 @@ const Home = () => {
         );
     }
 
-    const canSubmit = jobDescription.trim() && (selectedFileName || selfDescription.trim());
+    const canSubmit = jobDescription.trim() && (selectedFile || selfDescription.trim());
 
     return (
         <div className='home-page-gemini'>
@@ -77,9 +75,8 @@ const Home = () => {
                             <div className="split-col">
                                 <div className="field-label">Upload Resume</div>
                                 <div className="field-inner">
-                                    <label className={`file-upload-box ${selectedFileName ? 'has-file' : ''}`}>
+                                    <label className={`file-upload-box ${selectedFile ? 'has-file' : ''}`}>
                                         <input
-                                            ref={resumeInputRef}
                                             onChange={handleFileChange}
                                             type='file'
                                             accept='.pdf'
@@ -87,9 +84,9 @@ const Home = () => {
                                         />
                                         <div className="file-upload-text">
                                             <span>
-                                                {selectedFileName ? selectedFileName : "Click to select a PDF"}
+                                                {selectedFile ? selectedFile.name : "Click to select a PDF"}
                                             </span>
-                                            {!selectedFileName && <small>Supported: PDF only</small>}
+                                            {!selectedFile && <small>Supported: PDF only</small>}
                                         </div>
                                         <div className="file-upload-icon">
                                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
