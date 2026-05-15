@@ -1,20 +1,18 @@
 .interview-page {
     display: flex;
-    flex: 1;
     justify-content: center;
-    align-items: stretch;
+    align-items: flex-start;
     width: 100%;
-    padding: 1.5rem 2rem 1.5rem 2rem;
+    height: calc(100vh - 70px);
+    padding: 1.5rem 2rem;
     box-sizing: border-box;
-    min-height: 0;
-    overflow-y: auto;
+    overflow: hidden;
     
     .interview-layout {
         display: flex;
         width: 100%;
         max-width: 1200px;
-        flex: 1;
-        min-height: 0;
+        height: 100%;
         background-color: rgba(23, 19, 19, 0.6);
         backdrop-filter: blur(20px);
         border-radius: 24px;
