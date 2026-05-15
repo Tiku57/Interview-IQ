@@ -60,20 +60,30 @@ export const useInterview = () => {
         return response ? response.interviewReports : [];
     }
 
-    const getResumePdf = async (interviewReportId) => {
+    const getResumePdf = async (reportData) => {
+        if (!reportData?.resume) return;
+        
         setLoading(true)
-        let response = null
         try {
-            response = await generateResumePdf({ interviewReportId })
-            const url = window.URL.createObjectURL(new Blob([ response ], { type: "application/pdf" }))
-            const link = document.createElement("a")
-            link.href = url
-            link.setAttribute("download", `resume_${interviewReportId}.pdf`)
-            document.body.appendChild(link)
-            link.click()
+            const { jsPDF } = await import('jspdf');
+            const doc = new jsPDF();
+            
+            // Basic formatting
+            doc.setFontSize(20);
+            doc.text("Resume - Tailored by InterviewIQ", 20, 20);
+            
+            doc.setFontSize(12);
+            doc.setFont("helvetica", "normal");
+            
+            // Split text to fit page width
+            const splitResume = doc.splitTextToSize(reportData.resume, 170);
+            doc.text(splitResume, 20, 40);
+            
+            doc.save(`resume_${reportData._id || 'download'}.pdf`);
         }
         catch (error) {
-            console.log(error)
+            console.log("PDF Error:", error)
+            alert("Failed to generate PDF. Please try again.")
         } finally {
             setLoading(false)
         }

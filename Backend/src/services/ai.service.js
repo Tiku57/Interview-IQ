@@ -84,11 +84,10 @@ async function generateInterviewReport({ resume, selfDescription, jobDescription
         } catch (error) {
             console.error(`>>> Model ${modelName} failed:`, error.message);
             lastError = error;
-            // Continue to next model if it's a 503 or 429
             if (error.message.includes("503") || error.message.includes("429")) {
                 continue;
             } else {
-                throw error; // If it's a different error, stop and report
+                throw error;
             }
         }
     }
@@ -96,52 +95,6 @@ async function generateInterviewReport({ resume, selfDescription, jobDescription
     throw lastError || new Error("All AI models failed to respond");
 }
 
-/**
- * @name generateResumePdf
- * @description Generates a tailored resume PDF using AI and Puppeteer.
- */
-async function generateResumePdf({ resume, selfDescription, jobDescription }) {
-    const puppeteer = require("puppeteer");
-    
-    // Use the AI to generate a clean, professional HTML version of the resume
-    const model = genAI.getGenerativeModel({ model: "gemini-flash-latest" });
-    
-    const prompt = `
-        You are a professional resume writer. Create a clean, modern, and professional HTML/CSS resume for a candidate based on the following info.
-        Tailor the resume to match the Job Description perfectly.
-
-        Job Description: ${jobDescription}
-        Original Resume Text: ${resume}
-        Self Description: ${selfDescription}
-
-        Requirements:
-        1. Use modern CSS (Google Fonts, clean margins).
-        2. Include sections: Contact, Professional Summary, Skills, Experience, Education.
-        3. Highlight the candidate's strengths for this specific job.
-        4. Return ONLY the raw HTML code (no markdown backticks).
-        5. Make it look professional and ready for an A4 page.
-    `;
-
-    const result = await model.generateContent(prompt);
-    const htmlContent = result.response.text().replace(/```html|```/g, "").trim();
-
-    // Convert HTML to PDF using Puppeteer
-    const browser = await puppeteer.launch({
-        args: ['--no-sandbox', '--disable-setuid-sandbox']
-    });
-    const page = await browser.newPage();
-    await page.setContent(htmlContent, { waitUntil: "networkidle0" });
-    const pdfBuffer = await page.pdf({
-        format: "A4",
-        printBackground: true,
-        margin: { top: "20px", bottom: "20px", left: "20px", right: "20px" }
-    });
-    await browser.close();
-
-    return pdfBuffer;
-}
-
 module.exports = {
-    generateInterviewReport,
-    generateResumePdf
+    generateInterviewReport
 };
