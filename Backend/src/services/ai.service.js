@@ -7,8 +7,8 @@ const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GENAI_API_KEY);
  * @description Service to generate interview report with automatic model failover.
  */
 async function generateInterviewReport({ resume, selfDescription, jobDescription }) {
-    // List of models to try in order of preference
-    const modelsToTry = ["gemini-flash-latest", "gemini-2.0-flash-lite", "gemini-pro-latest"];
+    // List of models to try in order of preference. gemini-3.5-flash is stable on free tier.
+    const modelsToTry = ["gemini-3.5-flash", "gemini-2.5-flash", "gemini-flash-latest", "gemini-1.5-flash"];
     let lastError = null;
 
     for (const modelName of modelsToTry) {
