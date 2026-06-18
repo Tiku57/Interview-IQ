@@ -11,8 +11,9 @@ const interviewReportModel = require("../models/interviewReport.model")
 async function generateInterViewReportController(req, res) {
     let currentStep = "STEP 1: Request received";
     try {
-        console.log("Gemini Key Present:", !!process.env.GOOGLE_GENAI_API_KEY);
-        console.log("Mongo URI Present:", !!process.env.MONGODB_URI);
+        console.log("GEMINI_API_KEY:", !!process.env.GEMINI_API_KEY);
+        console.log("MONGODB_URI:", !!process.env.MONGODB_URI);
+        console.log("JWT_SECRET:", !!process.env.JWT_SECRET);
         
         console.log(currentStep);
         console.log("=== REQUEST DETAILS ===");
@@ -85,16 +86,18 @@ async function generateInterViewReportController(req, res) {
             interviewReport
         });
     } catch (error) {
-        console.error("INTERVIEW ROUTE FAILURE");
-        console.error(`FAILED AT ${currentStep}`);
+        console.error("INTERVIEW REPORT ERROR");
         console.error(error);
         console.error(error.message);
         console.error(error.stack);
-        
-        res.status(500).json({ 
-            step: currentStep,
+
+        return res.status(500).json({
+            success: false,
             error: error.message,
-            stack: process.env.NODE_ENV !== "production" ? error.stack : undefined
+            stack:
+                process.env.NODE_ENV !== "production"
+                    ? error.stack
+                    : undefined
         });
     }
 }
