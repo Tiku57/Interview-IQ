@@ -54,7 +54,7 @@ async function generateInterViewReportController(req, res) {
         });
     } catch (error) {
         console.error("Error generating report:", error.message);
-        res.status(500).json({ message: "Failed to generate interview report. Ensure you are using a US-based server region." });
+        res.status(500).json({ message: error.message || "Failed to generate interview report. Ensure you are using a US-based server region." });
     }
 }
 
