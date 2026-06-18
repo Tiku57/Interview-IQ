@@ -120,7 +120,38 @@ async function generateInterviewReport({ resume, selfDescription, jobDescription
         }
     }
 
-    throw lastError || new Error("All AI models failed to respond");
+    // Return a mock fallback report instead of throwing a 500 error
+    return {
+        title: "AI Report Generation Failed - Fallback Provided",
+        matchScore: 50,
+        technicalQuestions: [
+            {
+                question: "What are your primary technical strengths?",
+                intention: "Fallback technical question",
+                answer: "Highlight your most relevant technical skills."
+            }
+        ],
+        behavioralQuestions: [
+            {
+                question: "Tell me about a time you faced a difficult challenge.",
+                intention: "Fallback behavioral question",
+                answer: "Use the STAR method."
+            }
+        ],
+        skillGaps: [
+            {
+                skill: "AI Service Unavailable",
+                severity: "low"
+            }
+        ],
+        preparationPlan: [
+            {
+                day: 1,
+                focus: "Review basics",
+                tasks: ["Wait for AI service to recover", "Review resume"]
+            }
+        ]
+    };
 }
 
 module.exports = {

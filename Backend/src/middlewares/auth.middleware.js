@@ -7,9 +7,6 @@ async function authUser(req, res, next) {
     console.log("=== AUTH MIDDLEWARE START ===");
     console.log("Authorization Header:", req.headers.authorization);
 
-    // MOCK USER FOR LOCAL TESTING
-    req.user = { id: "test-user-id" };
-    return next();
 
     // Accept token from cookie OR Authorization: Bearer <token> header
     let token = req.cookies.token
