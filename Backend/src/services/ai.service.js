@@ -7,7 +7,7 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || process.env.G
  * @description Service to generate interview report with automatic model failover.
  */
 async function generateInterviewReport({ resume, selfDescription, jobDescription }) {
-    const modelsToTry = ["gemini-3.5-flash", "gemini-2.5-flash", "gemini-flash-latest", "gemini-1.5-flash"];
+    const modelsToTry = ["gemini-2.0-flash", "gemini-2.0-flash-lite", "gemini-flash-latest"];
     let lastError = null;
 
     for (const modelName of modelsToTry) {
@@ -78,18 +78,31 @@ async function generateInterviewReport({ resume, selfDescription, jobDescription
             if (!text) throw new Error("Empty response received from Gemini.");
 
             console.log(`[AI Service] Parsing JSON response...`);
-            const jsonStr = text.includes("```json") 
+            let jsonStr = text.includes("```json") 
                 ? text.split("```json")[1].split("```")[0].trim() 
                 : text.trim();
             
-            try {
-                const parsedJSON = JSON.parse(jsonStr);
-                console.log(`[AI Service] JSON parsed successfully.`);
-                return parsedJSON;
-            } catch (jsonError) {
-                console.error(`[AI Service] JSON Parsing failed. Raw string:`, jsonStr);
-                throw new Error(`JSON Parse Error: ${jsonError.message}`);
+            // Fix for Gemini sometimes generating malformed JSON (like an extra trailing brace)
+            let parsedJSON = null;
+            let currentStr = jsonStr;
+            
+            // Iteratively remove trailing characters until JSON.parse succeeds
+            while (currentStr.length > 20) {
+                try {
+                    parsedJSON = JSON.parse(currentStr);
+                    break; // Success!
+                } catch (e) {
+                    currentStr = currentStr.slice(0, -1);
+                }
             }
+
+            if (!parsedJSON) {
+                console.error(`[AI Service] JSON Parsing failed entirely. Raw string:`, jsonStr);
+                throw new Error(`JSON Parse Error: Could not salvage valid JSON. Original error: Unexpected non-whitespace character.`);
+            }
+
+            console.log(`[AI Service] JSON parsed successfully.`);
+            return parsedJSON;
 
         } catch (error) {
             console.error(`>>> Model ${modelName} failed:`);
