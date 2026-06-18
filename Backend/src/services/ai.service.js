@@ -111,12 +111,8 @@ async function generateInterviewReport({ resume, selfDescription, jobDescription
             console.error(`Stack: ${error.stack}`);
             
             lastError = error;
-            if (error.message.includes("503") || error.message.includes("429") || error.message.includes("location is not supported")) {
-                console.log(`>>> Retrying with next model due to infrastructure/quota limits...`);
-                continue;
-            } else {
-                throw error;
-            }
+            console.log(`>>> Retrying with next model or using fallback...`);
+            continue;
         }
     }
 
