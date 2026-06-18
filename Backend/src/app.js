@@ -27,6 +27,33 @@ const interviewRouter = require("./routes/interview.routes")
 app.use("/api/auth", authRouter)
 app.use("/api/interview", interviewRouter)
 
+app.get("/api/debug/gemini", async (req, res) => {
+    try {
+        const { GoogleGenerativeAI } = require("@google/generative-ai");
+        const apiKey = process.env.GEMINI_API_KEY || process.env.GOOGLE_GENAI_API_KEY;
+        if (!apiKey) throw new Error("No API key configured");
+        
+        const genAI = new GoogleGenerativeAI(apiKey);
+        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" }); // Testing with default valid model
+        
+        // Lightweight call
+        const result = await model.generateContent("ping");
+        
+        return res.json({
+            success: true,
+            apiKeyPresent: true,
+            model: "gemini-1.5-flash",
+            geminiConnection: "working"
+        });
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            error: error.message,
+            stack: error.stack
+        });
+    }
+});
+
 
 
 module.exports = app
