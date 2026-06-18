@@ -9,17 +9,27 @@ const interviewReportModel = require("../models/interviewReport.model")
  * @description Controller to generate interview report based on user self description, resume and job description.
  */
 async function generateInterViewReportController(req, res) {
+    let currentStep = "STEP 1: Request received";
     try {
+        console.log("Gemini Key Present:", !!process.env.GOOGLE_GENAI_API_KEY);
+        console.log("Mongo URI Present:", !!process.env.MONGODB_URI);
+        
+        console.log(currentStep);
         let resumeText = "";
 
         if (req.file) {
+            currentStep = "STEP 2: PDF uploaded";
+            console.log(currentStep);
             try {
                 const pdfParser = new pdfParse.PDFParse(Uint8Array.from(req.file.buffer));
                 await pdfParser.load();
+                currentStep = "STEP 3: PDF parsed";
+                console.log(currentStep);
                 const parsedContent = await pdfParser.getText();
                 resumeText = parsedContent.text || "";
             } catch (err) {
-                return res.status(400).json({ message: "Failed to parse the uploaded PDF resume." });
+                console.error("FAILED AT STEP 3: PDF Parsing");
+                throw new Error("Failed to parse the uploaded PDF resume.");
             }
         }
 
@@ -29,17 +39,24 @@ async function generateInterViewReportController(req, res) {
             return res.status(400).json({ message: "Either a resume or a self description must be provided." });
         }
 
+        currentStep = "STEP 4: Prompt generated & STEP 5: Calling Gemini";
+        console.log(currentStep);
         const interViewReportByAi = await generateInterviewReport({
             resume: resumeText,
             selfDescription,
             jobDescription
         });
 
+        currentStep = "STEP 6: Gemini response received & STEP 7: JSON parsed";
+        console.log(currentStep);
+
         // Sanitize matchScore (ensure it's a number)
         if (interViewReportByAi.matchScore && typeof interViewReportByAi.matchScore === "string") {
             interViewReportByAi.matchScore = parseInt(interViewReportByAi.matchScore.replace(/[^0-9]/g, "")) || 0;
         }
 
+        currentStep = "STEP 8: MongoDB save";
+        console.log(currentStep);
         const interviewReport = await interviewReportModel.create({
             user: req.user.id,
             resume: resumeText,
@@ -47,14 +64,27 @@ async function generateInterViewReportController(req, res) {
             jobDescription,
             ...interViewReportByAi
         });
+        
+        console.log("STEP 8: MongoDB save successful");
+
+        currentStep = "STEP 9: Response sent";
+        console.log(currentStep);
 
         res.status(201).json({
             message: "Interview report generated successfully.",
             interviewReport
         });
     } catch (error) {
-        console.error("Error generating report:", error.message);
-        res.status(500).json({ message: error.message || "Failed to generate interview report. Ensure you are using a US-based server region." });
+        console.error(`FAILED AT ${currentStep}`);
+        console.error(error);
+        console.error(error.message);
+        console.error(error.stack);
+        
+        res.status(500).json({ 
+            step: currentStep,
+            error: error.message,
+            stack: process.env.NODE_ENV !== "production" ? error.stack : undefined
+        });
     }
 }
 

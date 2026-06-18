@@ -7,7 +7,6 @@ const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GENAI_API_KEY);
  * @description Service to generate interview report with automatic model failover.
  */
 async function generateInterviewReport({ resume, selfDescription, jobDescription }) {
-    // List of models to try in order of preference. gemini-3.5-flash is stable on free tier.
     const modelsToTry = ["gemini-3.5-flash", "gemini-2.5-flash", "gemini-flash-latest", "gemini-1.5-flash"];
     let lastError = null;
 
@@ -69,22 +68,38 @@ async function generateInterviewReport({ resume, selfDescription, jobDescription
                 - Return ONLY the raw JSON object.
             `;
 
+            console.log(`[AI Service] Sending prompt to Gemini ${modelName}...`);
             const result = await model.generateContent(prompt);
+            console.log(`[AI Service] Received response from Gemini ${modelName}.`);
+            
             const response = await result.response;
             const text = response.text();
 
-            if (!text) throw new Error("Empty response");
+            if (!text) throw new Error("Empty response received from Gemini.");
 
+            console.log(`[AI Service] Parsing JSON response...`);
             const jsonStr = text.includes("```json") 
                 ? text.split("```json")[1].split("```")[0].trim() 
                 : text.trim();
             
-            return JSON.parse(jsonStr);
+            try {
+                const parsedJSON = JSON.parse(jsonStr);
+                console.log(`[AI Service] JSON parsed successfully.`);
+                return parsedJSON;
+            } catch (jsonError) {
+                console.error(`[AI Service] JSON Parsing failed. Raw string:`, jsonStr);
+                throw new Error(`JSON Parse Error: ${jsonError.message}`);
+            }
 
         } catch (error) {
-            console.error(`>>> Model ${modelName} failed:`, error.message);
+            console.error(`>>> Model ${modelName} failed:`);
+            console.error(`Status Code: ${error?.status || 'Unknown'}`);
+            console.error(`Message: ${error.message}`);
+            console.error(`Stack: ${error.stack}`);
+            
             lastError = error;
-            if (error.message.includes("503") || error.message.includes("429")) {
+            if (error.message.includes("503") || error.message.includes("429") || error.message.includes("location is not supported")) {
+                console.log(`>>> Retrying with next model due to infrastructure/quota limits...`);
                 continue;
             } else {
                 throw error;

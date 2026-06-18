@@ -23,7 +23,11 @@ export const useInterview = () => {
             setReport(response.interviewReport)
         } catch (error) {
             console.log(error)
-            alert(error.response?.data?.message || "An error occurred while generating the report.");
+            alert(
+                error.response?.data?.error ||
+                error.message ||
+                "An error occurred while generating the report."
+            );
         } finally {
             setLoading(false)
         }
