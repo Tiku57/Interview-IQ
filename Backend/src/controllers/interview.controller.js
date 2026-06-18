@@ -15,6 +15,16 @@ async function generateInterViewReportController(req, res) {
         console.log("Mongo URI Present:", !!process.env.MONGODB_URI);
         
         console.log(currentStep);
+        console.log("=== REQUEST DETAILS ===");
+        console.log("req.user:", req.user);
+        console.log("req.body:", req.body);
+        console.log("req.file:", req.file ? {
+            originalname: req.file.originalname,
+            mimetype: req.file.mimetype,
+            size: req.file.size
+        } : "No file uploaded");
+        console.log("=======================");
+
         let resumeText = "";
 
         if (req.file) {
@@ -75,6 +85,7 @@ async function generateInterViewReportController(req, res) {
             interviewReport
         });
     } catch (error) {
+        console.error("INTERVIEW ROUTE FAILURE");
         console.error(`FAILED AT ${currentStep}`);
         console.error(error);
         console.error(error.message);

@@ -4,6 +4,8 @@ const tokenBlacklistModel = require("../models/blacklist.model")
 
 
 async function authUser(req, res, next) {
+    console.log("=== AUTH MIDDLEWARE START ===");
+    console.log("Authorization Header:", req.headers.authorization);
 
     // Accept token from cookie OR Authorization: Bearer <token> header
     let token = req.cookies.token
@@ -13,6 +15,7 @@ async function authUser(req, res, next) {
     }
 
     if (!token) {
+        console.error("AUTH FAILED: Token not provided.");
         return res.status(401).json({
             message: "Token not provided."
         })
@@ -23,6 +26,7 @@ async function authUser(req, res, next) {
     })
 
     if (isTokenBlacklisted) {
+        console.error("AUTH FAILED: Token is blacklisted.");
         return res.status(401).json({
             message: "token is invalid"
         })
@@ -30,18 +34,19 @@ async function authUser(req, res, next) {
 
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET)
+        console.log("Decoded User:", decoded);
 
         req.user = decoded
 
         next()
 
     } catch (err) {
-
+        console.error("AUTH FAILED: JWT verification failed.");
+        console.error("JWT Error:", err.message);
         return res.status(401).json({
             message: "Invalid token."
         })
     }
-
 }
 
 
