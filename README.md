@@ -2,7 +2,7 @@
 
 InterviewIQ is an enterprise-grade AI assistant that parses your resume, compares it against target job descriptions, and generates highly tailored technical and behavioral interview preparation plans using Gemini 2.5 Flash.
 
-**🌟 Live Demo: [https://dog-studio-clone-six.vercel.app/](https://dog-studio-clone-six.vercel.app/)**
+**🌟 Live Demo: [https://interview-iq-three-xi.vercel.app/](https://interview-iq-three-xi.vercel.app/)**
 
 ## ✨ Enterprise Features
 * **Async Job Queue Processing:** Offloads heavy AI generation and PDF parsing tasks to a background worker via **BullMQ** and **Redis**, preventing HTTP timeouts and scaling effectively.
