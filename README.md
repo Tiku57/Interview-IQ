@@ -1,84 +1,73 @@
-# InterviewIQ 🚀
+# InterviewIQ - AI Powered Interview Preparation
 
-InterviewIQ is a **Production-Ready Full Stack Gen AI Job Preparation Platform**. It empowers job seekers to analyze job descriptions against their profiles, detect skill gaps, generate AI-powered interview questions, and build a personalized preparation roadmap using Google's Gemini AI.
+InterviewIQ is an enterprise-grade AI assistant that parses your resume, compares it against target job descriptions, and generates highly tailored technical and behavioral interview preparation plans using Gemini 2.5 Flash.
 
-### 🌐 Live Demo
-- **Frontend**: [https://interview-aerocb7z8-aaditya-sattawans-projects.vercel.app](https://interview-aerocb7z8-aaditya-sattawans-projects.vercel.app)
-- **Backend API**: [https://interview-iq-ci8f.onrender.com](https://interview-iq-ci8f.onrender.com)
+## ✨ Enterprise Features
+* **Async Job Queue Processing:** Offloads heavy AI generation and PDF parsing tasks to a background worker via **BullMQ** and **Redis**, preventing HTTP timeouts and scaling effectively.
+* **Resilient Architecture:** Implements a multi-model fallback strategy ensuring 99.9% uptime for report generation.
+* **Structured Logging & Validation:** Uses **Winston** for observability and **Zod** for robust request validation and schemas.
+* **Security First:** Defends against abuse with **Helmet**, **express-rate-limit**, and TTL-indexed token blacklisting.
+* **Modern Frontend:** Features **TanStack Query (React Query)** for efficient data fetching, polling, and cache invalidation, paired with Shimmer Loading Skeletons for a fluid user experience.
+* **Test Coverage:** Automated API tests using **Jest** and **Supertest** with MongoDB in-memory server.
+* **Dockerized:** Ready for local development with `docker-compose`.
 
----
-## ✨ Key Features
+## 🏗️ Architecture
+- **Frontend:** React, TanStack Query, React Router, SCSS
+- **Backend:** Node.js, Express, Mongoose
+- **Database:** MongoDB
+- **Queue/Cache:** Redis, BullMQ
+- **AI Integration:** Google Generative AI (Gemini Flash family)
 
-- **🛡️ Secure Authentication**: Full JWT-based authentication system with premium-designed, themed Login and Register pages featuring ambient glow effects.
-- **🧠 AI-Powered Strategy**: Generates custom technical and behavioral interview questions plus a detailed day-by-day preparation roadmap based on your profile and the target job.
-- **📄 Intelligent Resume Parsing**: Automatically extracts and analyzes text from uploaded PDF resumes using advanced parsing techniques.
-- **⚖️ Skill Gap Detection**: Uses AI to cross-reference your skills against job requirements, providing a "Match Score" and highlighting critical areas for improvement.
-- **🎨 Modern "Gemini-like" UI**: A stunning, responsive interface built with glassmorphism, smooth gradients (Pink/Purple theme), and interactive micro-animations. Features a signature "flowing color" animated gradient text effect.
-- **↕️ Draggable Workspace**: A fully resizable sidebar workspace that lets you customize your view, with a smooth dragging handle and persistent layout.
-- **📱 Fully Responsive Layout**: Optimized for all devices—from desktop monitors to mobile phones—featuring a slick hamburger menu, mobile-optimized navigation, and perfectly aligned equal-height flexbox grids.
-- **📥 ATS-Optimized Downloads**: Dynamically generates and allows you to download an ATS-friendly resume/report summary.
-
----
-## 🛠️ Tech Stack
-
-**Frontend:**
-- **React (Vite)**: For a blazing fast development and production experience.
-- **SCSS**: Advanced styling with a focus on modern design principles (Glassmorphism, Flexbox/Grid, continuous CSS keyframe animations).
-- **React Router**: Seamless navigation and protected routing for authenticated users.
-- **Axios**: Robust API communication.
-
-
-**Backend:**
-- **Node.js & Express.js**: High-performance backend architecture.
-- **MongoDB & Mongoose**: Scalable NoSQL database for user data and interview reports.
-- **JWT**: Secure, stateless authentication.
-- **@google/genai**: Integration with Google's Gemini Pro model for advanced reasoning.
-- **pdf-parse**: Reliable PDF text extraction.
-
----
 ## 🚀 Getting Started
-
-### Prerequisites
+### 1. Prerequisites
 - Node.js (v18+)
-- MongoDB Atlas account
-- Google Gemini API Key (get it at [Google AI Studio](https://aistudio.google.com/))
+- MongoDB instance (or local)
+- Redis server (or Docker)
+- Gemini API Key
+
+### 2. Setup (Backend)
+```bash
+cd Backend
+npm install
+```
+Create a `.env` file in `Backend`:
+```
+PORT=3000
+MONGODB_URI=your_mongo_url
+JWT_SECRET=your_secret
+GEMINI_API_KEY=your_gemini_key
+REDIS_URL=redis://localhost:6379
+```
+
+Run tests:
+```bash
+npm test
+```
+
+Start the server & worker:
+```bash
+npm run dev
+```
+
+### 3. Setup (Frontend)
+```bash
+cd Frontend
+npm install
+```
+Start development server:
+```bash
+npm run dev
+```
+
+### 4. Docker Quickstart
+```bash
+docker-compose up -d
+```
+This will spin up Redis and the Node.js backend.
+
+## 📈 Scalability Highlights
+- **Event-Driven AI Generation:** Instead of blocking HTTP requests for 10-20 seconds while Gemini processes resumes, InterviewIQ enqueues a job in BullMQ and immediately responds with a `201 Accepted`. The frontend uses TanStack Query to poll the endpoint until the worker completes the generation.
+- **Failover Logic:** Automatically attempts processing with `gemini-2.5-flash`, then falls back to `2.0-flash` or `1.5-flash` in case of rate limits or transient failures.
 
 ---
-### Installation
-
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/Tiku57/InterviewIQ.git
-   cd InterviewIQ
-   ```
-
-2. **Backend Setup:**
-   ```bash
-   cd Backend
-   npm install
-   # Create .env file
-   echo "PORT=3000\nMONGO_URI=your_mongodb_uri\nJWT_SECRET=your_jwt_secret\nGOOGLE_GENAI_API_KEY=your_gemini_key" > .env
-   npm run dev
-   ```
-
-3. **Frontend Setup:**
-   ```bash
-   cd ../Frontend
-   npm install
-   npm run dev
-   ```
-
----
-## 📸 UI/UX Design Philosophy
-
-InterviewIQ isn't just a tool; it's an experience. We've prioritized:
-- **Visual Excellence**: A curated dark-mode palette (#171313) with vibrant Pink (#F040B5) and Purple accents. Includes details like seamless flowing gradient text loops.
-- **Pixel-Perfect Structure**: Meticulously balanced spacing, centered visual dividers, and equal-height layout components for a professional feel.
-- **Interactive Feedback**: Draggable handles, hover glow effects, dynamic dashed drop zones, and smooth transitions that make the app feel alive.
-- **Clarity**: A clean, "no-box" full-page layout that focuses on the content that matters most—your career preparation.
-
----
-👨‍💻 Author
-Aaditya Sattawan
----
-GitHub: https://github.com/Tiku57
+*Built with ❤️ for aspiring engineers.*

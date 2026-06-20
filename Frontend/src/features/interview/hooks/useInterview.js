@@ -1,73 +1,57 @@
 import { getAllInterviewReports, generateInterviewReport, getInterviewReportById, generateResumePdf } from "../services/interview.api"
-import { useContext, useEffect } from "react"
-import { InterviewContext } from "../interview.context"
-import { useParams } from "react-router"
-
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
+import { useParams, useNavigate } from "react-router"
 
 export const useInterview = () => {
-
-    const context = useContext(InterviewContext)
     const { interviewId } = useParams()
+    const queryClient = useQueryClient()
+    const navigate = useNavigate()
 
-    if (!context) {
-        throw new Error("useInterview must be used within an InterviewProvider")
-    }
+    const { data: report, isLoading: isReportLoading } = useQuery({
+        queryKey: ['interview', interviewId],
+        queryFn: async () => {
+            const response = await getInterviewReportById(interviewId)
+            return response.interviewReport
+        },
+        enabled: !!interviewId,
+        refetchInterval: (query) => {
+            const data = query.state?.data;
+            if (data?.status === 'pending' || data?.status === 'processing') {
+                return 3000; // Poll every 3s
+            }
+            return false;
+        }
+    })
 
-    const { loading, setLoading, report, setReport, reports, setReports } = context
+    const { data: reports, isLoading: isReportsLoading } = useQuery({
+        queryKey: ['interviews'],
+        queryFn: async () => {
+            const response = await getAllInterviewReports()
+            return response.interviewReports
+        }
+    })
 
-    const generateReport = async ({ jobDescription, selfDescription, resumeFile }) => {
-        setLoading(true)
-        let response = null
-        try {
-            response = await generateInterviewReport({ jobDescription, selfDescription, resumeFile })
-            setReport(response.interviewReport)
-        } catch (error) {
+    const generateMutation = useMutation({
+        mutationFn: async ({ jobDescription, selfDescription, resumeFile }) => {
+            const response = await generateInterviewReport({ jobDescription, selfDescription, resumeFile })
+            return response.interviewReport
+        },
+        onSuccess: (data) => {
+            queryClient.invalidateQueries({ queryKey: ['interviews'] })
+        },
+        onError: (error) => {
             console.log(error)
             alert(
                 error?.response?.data?.error ||
                 error?.message ||
                 "Unknown Error"
             );
-        } finally {
-            setLoading(false)
         }
-
-        return response ? response.interviewReport : null
-    }
-
-    const getReportById = async (interviewId) => {
-        setLoading(true)
-        let response = null
-        try {
-            response = await getInterviewReportById(interviewId)
-            setReport(response.interviewReport)
-        } catch (error) {
-            console.log(error)
-        } finally {
-            setLoading(false)
-        }
-        return response.interviewReport
-    }
-
-    const getReports = async () => {
-        setLoading(true)
-        let response = null
-        try {
-            response = await getAllInterviewReports()
-            setReports(response.interviewReports)
-        } catch (error) {
-            console.log(error)
-        } finally {
-            setLoading(false)
-        }
-
-        return response ? response.interviewReports : [];
-    }
+    })
 
     const getResumePdf = async (reportData) => {
         if (!reportData?.resume) return;
         
-        setLoading(true)
         try {
             const { jsPDF } = await import('jspdf');
             const doc = new jsPDF('p', 'mm', 'a4');
@@ -138,21 +122,16 @@ export const useInterview = () => {
         catch (error) {
             console.log("PDF Error:", error)
             alert("Failed to generate professional PDF. Please try again.")
-        } finally {
-            setLoading(false)
         }
     }
 
-    useEffect(() => {
-        getReports()
-    }, [])
-
-    useEffect(() => {
-        if (interviewId) {
-            getReportById(interviewId)
-        }
-    }, [ interviewId ])
-
-    return { loading, report, reports, generateReport, getReportById, getReports, getResumePdf }
-
+    return { 
+        loading: isReportLoading || isReportsLoading || generateMutation.isPending, 
+        report, 
+        reports, 
+        generateReport: generateMutation.mutateAsync, 
+        getReportById: () => {}, // Backward compatibility, query handles fetching automatically
+        getReports: () => {}, 
+        getResumePdf 
+    }
 }

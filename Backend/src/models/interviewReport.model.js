@@ -90,7 +90,12 @@ const interviewReportSchema = new mongoose.Schema({
     },
     title: {
         type: String,
-        required: [ true, "Job title is required" ]
+        default: "Generating Report..."
+    },
+    status: {
+        type: String,
+        enum: ['pending', 'processing', 'completed', 'failed'],
+        default: 'pending'
     }
 }, {
     timestamps: true

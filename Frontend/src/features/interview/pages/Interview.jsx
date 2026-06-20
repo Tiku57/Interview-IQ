@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import '../style/interview.scss'
 import { useInterview } from '../hooks/useInterview.js'
 import { useNavigate, useParams } from 'react-router'
-
+import { InterviewSkeleton } from '../components/Skeleton.jsx'
 
 
 const NAV_ITEMS = [
@@ -70,12 +70,16 @@ const Interview = () => {
 
 
 
-    if (loading || !report) {
+    if (loading || !report || report.status === 'pending' || report.status === 'processing') {
+        return <InterviewSkeleton />;
+    }
+
+    if (report.status === 'failed') {
         return (
             <main className='loading-screen'>
-                <h1>Loading your interview plan...</h1>
+                <h1>Failed to generate interview plan. Please try again.</h1>
             </main>
-        )
+        );
     }
 
     const scoreColor =

@@ -2,30 +2,24 @@ const userModel = require("../models/user.model")
 const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
 const tokenBlacklistModel = require("../models/blacklist.model")
+const asyncHandler = require("../utils/asyncHandler")
+const AppError = require("../utils/appError")
 
 /**
  * @name registerUserController
  * @description register a new user, expects username, email and password in the request body
  * @access Public
  */
-async function registerUserController(req, res) {
+const registerUserController = asyncHandler(async (req, res, next) => {
 
     const { username, email, password } = req.body
-
-    if (!username || !email || !password) {
-        return res.status(400).json({
-            message: "Please provide username, email and password"
-        })
-    }
 
     const isUserAlreadyExists = await userModel.findOne({
         $or: [ { username }, { email } ]
     })
 
     if (isUserAlreadyExists) {
-        return res.status(400).json({
-            message: "Account already exists with this email address or username"
-        })
+        return next(new AppError("Account already exists with this email address or username", 400))
     }
 
     const hash = await bcrypt.hash(password, 10)
@@ -58,7 +52,7 @@ async function registerUserController(req, res) {
         }
     })
 
-}
+})
 
 
 /**
@@ -66,24 +60,20 @@ async function registerUserController(req, res) {
  * @description login a user, expects email and password in the request body
  * @access Public
  */
-async function loginUserController(req, res) {
+const loginUserController = asyncHandler(async (req, res, next) => {
 
     const { email, password } = req.body
 
     const user = await userModel.findOne({ email })
 
     if (!user) {
-        return res.status(400).json({
-            message: "Invalid email or password"
-        })
+        return next(new AppError("Invalid email or password", 401))
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password)
 
     if (!isPasswordValid) {
-        return res.status(400).json({
-            message: "Invalid email or password"
-        })
+        return next(new AppError("Invalid email or password", 401))
     }
 
     const token = jwt.sign(
@@ -106,7 +96,7 @@ async function loginUserController(req, res) {
             email: user.email
         }
     })
-}
+})
 
 
 /**
@@ -114,7 +104,7 @@ async function loginUserController(req, res) {
  * @description clear token from user cookie and add the token in blacklist
  * @access public
  */
-async function logoutUserController(req, res) {
+const logoutUserController = asyncHandler(async (req, res, next) => {
     const token = req.cookies.token
 
     if (token) {
@@ -130,18 +120,20 @@ async function logoutUserController(req, res) {
     res.status(200).json({
         message: "User logged out successfully"
     })
-}
+})
 
 /**
  * @name getMeController
  * @description get the current logged in user details.
  * @access private
  */
-async function getMeController(req, res) {
+const getMeController = asyncHandler(async (req, res, next) => {
 
     const user = await userModel.findById(req.user.id)
 
-
+    if (!user) {
+        return next(new AppError("User not found", 404))
+    }
 
     res.status(200).json({
         message: "User details fetched successfully",
@@ -152,7 +144,7 @@ async function getMeController(req, res) {
         }
     })
 
-}
+})
 
 
 

@@ -50,39 +50,27 @@ async function generateInterViewReportController(req, res) {
             return res.status(400).json({ message: "Either a resume or a self description must be provided." });
         }
 
-        currentStep = "STEP 4: Prompt generated & STEP 5: Calling Gemini";
-        console.log(currentStep);
-        const interViewReportByAi = await generateInterviewReport({
-            resume: resumeText,
-            selfDescription,
-            jobDescription
-        });
-
-        currentStep = "STEP 6: Gemini response received & STEP 7: JSON parsed";
-        console.log(currentStep);
-
-        // Sanitize matchScore (ensure it's a number)
-        if (interViewReportByAi.matchScore && typeof interViewReportByAi.matchScore === "string") {
-            interViewReportByAi.matchScore = parseInt(interViewReportByAi.matchScore.replace(/[^0-9]/g, "")) || 0;
-        }
-
-        currentStep = "STEP 8: MongoDB save";
-        console.log(currentStep);
+        // Create pending interview report
         const interviewReport = await interviewReportModel.create({
             user: req.user.id,
             resume: resumeText,
             selfDescription,
             jobDescription,
-            ...interViewReportByAi
+            status: 'pending'
         });
-        
-        console.log("STEP 8: MongoDB save successful");
 
-        currentStep = "STEP 9: Response sent";
-        console.log(currentStep);
+        // Enqueue job for async processing
+        const { interviewQueue } = require('../queues/interview.queue');
+        await interviewQueue.add('generateReport', {
+            interviewId: interviewReport._id,
+            userId: req.user.id,
+            jobDescription,
+            selfDescription,
+            resumeText
+        });
 
         res.status(201).json({
-            message: "Interview report generated successfully.",
+            message: "Interview report generation started.",
             interviewReport
         });
     } catch (error) {

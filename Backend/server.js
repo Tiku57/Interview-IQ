@@ -9,6 +9,7 @@ if (!process.env.GEMINI_API_KEY && !process.env.GOOGLE_GENAI_API_KEY) {
 
 const app = require("./src/app")
 const connectToDB = require("./src/config/database")
+require("./src/workers/interview.worker"); // Start the worker
 
 connectToDB()
 

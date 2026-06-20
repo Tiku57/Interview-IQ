@@ -1,0 +1,79 @@
+.skeleton {
+  background: #e5e7eb;
+  background-image: linear-gradient(
+    90deg,
+    #e5e7eb 0px,
+    #f3f4f6 40px,
+    #e5e7eb 80px
+  );
+  background-size: 200vw 100%;
+  animation: shimmer 1.5s infinite linear;
+  border-radius: 4px;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200vw 0;
+  }
+  100% {
+    background-position: 200vw 0;
+  }
+}
+
+.skeleton-text {
+  height: 16px;
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+.skeleton-nav-title {
+  width: 60%;
+  height: 20px;
+  margin-bottom: 24px;
+}
+
+.skeleton-btn {
+  height: 48px;
+  width: 100%;
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+
+.skeleton-title {
+  height: 28px;
+  width: 40%;
+}
+
+.skeleton-badge {
+  height: 24px;
+  width: 80px;
+  border-radius: 12px;
+}
+
+.skeleton-card {
+  height: 60px;
+  width: 100%;
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+
+.skeleton-score-label {
+  width: 80px;
+  margin: 0 auto 16px auto;
+}
+
+.skeleton-circle {
+  height: 80px;
+  width: 80px;
+  border-radius: 50%;
+  margin: 16px auto;
+}
+
+.skeleton-tag {
+  height: 26px;
+  width: 60px;
+  border-radius: 16px;
+  display: inline-block;
+  margin-right: 8px;
+  margin-bottom: 8px;
+}
