@@ -72,4 +72,7 @@ This will spin up Redis and the Node.js backend.
 - **Failover Logic:** Automatically attempts processing with `gemini-2.5-flash`, then falls back to `2.0-flash` or `1.5-flash` in case of rate limits or transient failures.
 
 ---
-*Built with ❤️ for aspiring engineers.*
+👨‍💻 Author
+Aaditya Sattawan
+---
+GitHub: https://github.com/Tiku57
